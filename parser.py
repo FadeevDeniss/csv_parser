@@ -8,20 +8,20 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 
-def get_postcodes(files: dict):
+def get_postcodes(files: list) -> list:
     """Get only postcodes and returns a list for further sorting"""
-    with open(files['in'], newline='') as file:
+    with open(files[0], mode='r', newline='') as file:
         reader = csv.reader(file, dialect='excel')
         postcodes = [row[3] for row in reader]
         return postcodes
 
 
-def parse_csv(files: dict):
+def parse_csv(files: list) -> None:
     """Parse csv file and write unique results to a file"""
 
     postcodes, results_sorted = get_postcodes(files), []
-    with open(files['out'], mode='r', newline='') as csvfile:
-        with open(files['out'], mode='r', newline='') as resultsfile:
+    with open(files[0], mode='r', newline='') as csvfile:
+        with open(files[1], mode='w', newline='') as resultsfile:
             reader, writer = (
                 csv.reader(csvfile, dialect='excel'),
                 csv.writer(resultsfile, dialect='excel')
@@ -41,11 +41,10 @@ def parse_csv(files: dict):
 
 
 if __name__ == "__main__":
-    filepaths = {
-        'in': '/home/dfadeev/pp-complete.csv',
-        'out': '/home/dfadeev/results.csv'
-    }
-    t = time.time()
+    filepaths = [
+        '/home/dfadeev/pp-monthly-update-new-version.csv',
+        '/home/dfadeev/results.csv'
+    ]
     parse_csv(filepaths)
 
 
