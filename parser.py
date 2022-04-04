@@ -18,23 +18,13 @@ def get_postcodes(files: list) -> list:
 
 def parse_csv(files: list) -> None:
     """Parse csv file and write unique results to a file"""
-
-    postcodes, results_sorted = get_postcodes(files), []
-    with open(files[0], mode='r', newline='') as csvfile:
-        with open(files[1], mode='w', newline='') as resultsfile:
-            reader, writer = (
-                csv.reader(csvfile, dialect='excel'),
-                csv.writer(resultsfile, dialect='excel')
-            )
+    postcodes = get_postcodes(files)
+    with open(files[0], newline='') as csvfile:
+        with open(files[1], mode='x', newline='') as resultsfile:
+            reader = csv.reader(csvfile, dialect='excel')
+            writer = csv.writer(resultsfile, dialect='excel')
             for row in reader:
-                if all(
-                        [
-                            postcodes.count(row[3]) > 1,
-                            row not in results_sorted,
-                            row[3] not in results_sorted
-                        ]
-                ):
-                    results_sorted.append(row)
+                if postcodes.count(row[3]) > 1:
                     writer.writerow(row)
                 else:
                     continue
